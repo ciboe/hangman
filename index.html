@@ -330,6 +330,11 @@
       cursor: default;
     }
 
+    /* TRACKPAD DEDICATO (NASCOSTO SU DESKTOP) */
+    .mobile-trackpad {
+      display: none;
+    }
+
     /* BANNER FASE PREPARATORIA */
     .prep-overlay {
       position: absolute;
@@ -509,11 +514,23 @@
     }
 
     /* =========================================================================
-       OTTIMIZZAZIONE VERTICALITÀ SU TELEFONO E TABLET (SOLO <= 900px)
+       VERSIONE ESSENZIALE SMARTPHONE & TABLET (UNA SCHERMATA SENZA SCROLL)
        ========================================================================= */
-    @media (max-width: 900px) {
+    @media (max-width: 960px), (hover: none) and (pointer: coarse) {
+      html, body {
+        height: 100dvh;
+        overflow: hidden;
+        align-items: stretch;
+      }
+
       .game-wrapper {
+        height: 100dvh;
+        max-height: 100dvh;
+        overflow: hidden;
         padding: 6px;
+        display: grid;
+        grid-template-columns: 1fr 94px;
+        grid-template-rows: auto auto minmax(0, 1fr) clamp(128px, 24dvh, 210px);
         gap: 6px;
       }
 
@@ -521,121 +538,226 @@
         border-radius: 14px;
       }
 
-      /* Header compatto su 1-2 righe sottili */
+      /* 1. Barra altissima: solo Vite + Audio/Nuova parola */
       .top-header {
-        padding: 7px 10px;
+        grid-column: 1 / -1;
+        grid-row: 1;
+        padding: 5px 10px;
         gap: 6px;
       }
-      .brand-title { font-size: 15px; }
-      .brand-pill { display: none; }
-      .header-actions { gap: 6px; margin-left: auto; }
-      .hearts-pill { font-size: 13px; padding: 3px 8px; }
-      .audio-btn, .new-word-btn { font-size: 11.5px; padding: 4px 10px; }
-
-      /* HUD compatto sopra l'arena */
-      .hud-panel {
-        padding: 8px 10px;
-        gap: 8px;
+      .brand-group { display: none; }
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
+        gap: 6px;
       }
+      .hearts-pill {
+        font-size: 14px;
+        padding: 2px 10px;
+      }
+      .audio-btn, .new-word-btn {
+        font-size: 11px;
+        padding: 4px 10px;
+      }
+
+      /* 2. Pannello superiore sinistra: Tempo, Errori, Parola (+ eventuale indizio) */
+      .hud-panel {
+        grid-column: 1;
+        grid-row: 2;
+        padding: 6px 8px;
+        gap: 5px;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+        min-width: 0;
+      }
+      .hud-subtitle { display: none; }
+
+      .stats-row {
+        order: -1;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+      .stat-status { display: none; }
+      .stat-box {
+        min-width: 0;
+        padding: 3px 6px;
+        border-radius: 8px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .stat-label { font-size: 9px; }
+      .stat-value { font-size: 13px; }
+
       .word-section {
-        flex: 1 1 100%;
+        flex: 0 0 auto;
         gap: 4px;
       }
-      .hud-subtitle {
-        font-size: 9.5px;
-      }
       .hint-inline {
-        font-size: 11px;
+        font-size: 10.5px;
+        line-height: 1.25;
       }
       .word-boxes {
-        min-height: 32px;
+        min-height: 28px;
         gap: 4px;
       }
       .letter-tile {
-        width: 26px;
-        height: 31px;
-        font-size: 15px;
-        border-radius: 6px;
-      }
-      .stats-row {
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 6px;
-      }
-      .stat-box {
-        min-width: 0;
-        padding: 4px 4px;
-      }
-      .stat-label { font-size: 8.5px; }
-      .stat-value { font-size: 13px; }
-
-      /* Arena proporzionata senza deformazione */
-      .main-grid {
-        grid-template-columns: 1fr;
-        gap: 6px;
-      }
-      .arena-panel {
-        min-height: 0;
-        aspect-ratio: 780 / 480;
-        width: 100%;
+        width: 23px;
+        height: 27px;
+        font-size: 14px;
+        border-radius: 5px;
       }
 
-      /* Sidebar riorganizzata: Tastierino SUBITO sotto l'arena, poi Forca + Diario affiancati */
+      /* Scomparsa elementi non essenziali & promozione Forca in alto a destra */
+      .main-grid,
       .sidebar-panel {
-        display: grid;
-        grid-template-columns: 120px 1fr;
-        gap: 8px;
-        padding: 8px 10px;
+        display: contents;
       }
+      .sb-diary,
       .sb-keyboard {
-        grid-column: 1 / -1;
-        order: 1;
+        display: none;
       }
+
       .sb-gallows {
-        order: 2;
-      }
-      .sb-diary {
-        order: 3;
-        min-width: 0;
-      }
-      .sidebar-section-title {
-        font-size: 9.5px;
-        margin-bottom: 3px;
-      }
-      .keyboard-grid {
-        grid-template-columns: repeat(9, 1fr);
-        gap: 4px;
-      }
-      .key-btn {
-        padding: 6px 0;
-        font-size: 12px;
-      }
-      .gallows-box {
-        height: 92px;
+        grid-column: 2;
+        grid-row: 2;
+        background-color: #161616;
+        border: 2px solid #e5e5e5;
+        border-radius: 14px;
+        padding: 5px;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
       }
-      canvas#gallowsCanvas {
-        height: 100%;
-        width: auto;
+      .sb-gallows .sidebar-section-title {
+        font-size: 8.5px;
+        margin-bottom: 3px;
       }
-      .diary-box {
-        height: 92px;
-        font-size: 10.5px;
-        padding: 6px 8px;
+      .gallows-box {
+        width: 100%;
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+      }
+      canvas#gallowsCanvas {
+        width: 100%;
+        height: auto;
+        max-height: 74px;
       }
 
-      /* Modal iniziale a schermo intero su telefono */
+      /* 3. Centro: SOLO il campo di gioco */
+      .arena-panel {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        min-height: 0;
+        width: 100%;
+        height: 100%;
+      }
+      canvas#arenaCanvas {
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+        aspect-ratio: 780 / 480;
+      }
+
+      /* 4. Sotto: Trackpad dedicato (unico punto per muovere l'omino) */
+      .mobile-trackpad {
+        grid-column: 1 / -1;
+        grid-row: 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        background: radial-gradient(circle at center, #181818 0%, #0d0d0d 100%);
+        border: 2px solid #e5e5e5;
+        border-radius: 14px;
+        overflow: hidden;
+        touch-action: none;
+      }
+      .trackpad-crosshair {
+        position: absolute;
+        inset: 12px;
+        border: 1.5px dashed #333;
+        border-radius: 10px;
+        pointer-events: none;
+      }
+      .trackpad-hint {
+        pointer-events: none;
+        color: #777;
+        font-size: 12px;
+        font-weight: bold;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        text-align: center;
+        padding: 0 12px;
+        transition: opacity 0.12s ease;
+      }
+      .mobile-trackpad.active .trackpad-hint {
+        opacity: 0.22;
+      }
+      .trackpad-ring {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 76px;
+        height: 76px;
+        margin-left: -38px;
+        margin-top: -38px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.45);
+        background: rgba(255, 255, 255, 0.06);
+        pointer-events: none;
+        display: none;
+      }
+      .trackpad-knob {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 28px;
+        height: 28px;
+        margin-left: -14px;
+        margin-top: -14px;
+        border-radius: 50%;
+        background: rgba(243, 198, 35, 0.85);
+        border: 2px solid #ffffff;
+        pointer-events: none;
+        display: none;
+      }
+
+      /* Banner fase studio compatto */
+      .prep-overlay {
+        top: 6px;
+        padding: 6px 10px;
+        width: 94%;
+      }
+      .prep-overlay p {
+        font-size: 11px;
+        margin-bottom: 4px;
+      }
+      .prep-skip-btn {
+        font-size: 11px;
+        padding: 4px 10px;
+      }
+
+      /* Modal iniziale a schermo intero su mobile/tablet */
       .modal-backdrop {
         position: fixed;
         inset: 0;
         z-index: 900;
-        padding: 14px;
+        padding: 12px;
       }
       .modal-card {
-        padding: 16px 14px;
+        padding: 14px 12px;
+        max-height: 92dvh;
+        overflow-y: auto;
       }
       .modal-title { font-size: 15px; }
       .difficulty-selector {
@@ -679,7 +801,7 @@
           <span class="stat-label">TEMPO RIMASTO</span>
           <span class="stat-value val-yellow" id="timerVal">75s</span>
         </div>
-        <div class="stat-box">
+        <div class="stat-box stat-status">
           <span class="stat-label">STATO OMINO</span>
           <span class="stat-value val-green" id="statusVal">Ignaro (per ora)</span>
         </div>
@@ -703,11 +825,11 @@
           <div class="modal-card">
             <h2 class="modal-title">ATTENZIONE: JUMP SCARE STUPIDI &amp; SUONI IMPROVVISI</h2>
             <p class="modal-desc">
-              Guida l'omino disegnato malissimo col mouse in questo posto buio e ridicolo. Raccogli le <strong>sfere con le lettere</strong> (oppure premi i tasti sulla tastiera) per completare la parola prima che scada il tempo, finiscano i 3 cuori o la forca si completi.
+              Guida l'omino disegnato malissimo col mouse in questo posto buio e ridicolo. Raccogli le <strong>sfere con le lettere</strong> (oppure premi i tasti sulla tastiera su PC) per completare la parola prima che scada il tempo, finiscano i 3 cuori o la forca si completi.
             </p>
 
             <div class="controls-box">
-              <div>• <span class="c-yellow">Muoviti:</span> WASD / Frecce su PC, oppure trascina il dito sull'arena su telefono/tablet.</div>
+              <div>• <span class="c-yellow">Muoviti:</span> WASD / Frecce su PC, oppure usa il <strong>Trackpad in basso</strong> su smartphone/tablet.</div>
               <div>• <span class="c-red">Sfere ? rosse:</span> 50% aiuto reale, 35% solo jump scare stupido, 15% svantaggi!</div>
               <div>• <span class="c-green">Se perdi:</span> l'omino viene catturato e impiccato sul serio (con grafica trash).</div>
             </div>
@@ -745,6 +867,14 @@
           <div class="keyboard-grid" id="keyboardGrid"></div>
         </div>
       </div>
+    </div>
+
+    <!-- 4. TRACKPAD DEDICATO SOLO PER SMARTPHONE E TABLET -->
+    <div class="mobile-trackpad" id="mobileTrackpad">
+      <div class="trackpad-crosshair"></div>
+      <div class="trackpad-hint">TRACKPAD — TRASCINA QUI IL DITO PER CORRERE</div>
+      <div class="trackpad-ring" id="trackpadRing"></div>
+      <div class="trackpad-knob" id="trackpadKnob"></div>
     </div>
   </div>
 
@@ -1273,7 +1403,6 @@
 
     const audio = new HorrorAudio();
 
-    // Sblocco automatico audio su qualsiasi primo tocco/click/tasto (fondamentale su iOS Safari!)
     ['touchstart', 'touchend', 'pointerdown', 'mousedown', 'keydown'].forEach(evt => {
       window.addEventListener(evt, () => audio.unlock(), { passive: true });
     });
@@ -1299,6 +1428,10 @@
     const statusVal = document.getElementById('statusVal');
     const diaryBox = document.getElementById('diaryBox');
     const keyboardGrid = document.getElementById('keyboardGrid');
+
+    const mobileTrackpad = document.getElementById('mobileTrackpad');
+    const trackpadRing = document.getElementById('trackpadRing');
+    const trackpadKnob = document.getElementById('trackpadKnob');
 
     const startModal = document.getElementById('startModal');
     const diffSelector = document.getElementById('diffSelector');
@@ -1395,10 +1528,8 @@
     ];
 
     let spheres = [];
-
     const keys = {};
 
-    // Joystick virtuale flottante sull'arena (niente 4 frecce!)
     const joy = {
       active: false,
       touchId: null,
@@ -1409,8 +1540,32 @@
       maxRadius: 38
     };
 
+    function isEssentialMobileLayout() {
+      return window.getComputedStyle(mobileTrackpad).display !== 'none';
+    }
+
+    function updateTrackpadVisual() {
+      if (!joy.active || !isEssentialMobileLayout()) {
+        mobileTrackpad.classList.remove('active');
+        trackpadRing.style.display = 'none';
+        trackpadKnob.style.display = 'none';
+        return;
+      }
+      mobileTrackpad.classList.add('active');
+      trackpadRing.style.display = 'block';
+      trackpadKnob.style.display = 'block';
+      trackpadRing.style.transform = `translate3d(${joy.originX}px, ${joy.originY}px, 0)`;
+      trackpadKnob.style.transform = `translate3d(${joy.currX}px, ${joy.currY}px, 0)`;
+    }
+
+    function resetJoystick() {
+      joy.active = false;
+      joy.touchId = null;
+      updateTrackpadVisual();
+    }
+
     // =========================================================================
-    // 4. COSTRUZIONE TASTIERA SIDEBAR & LOG DIARIO
+    // 4. COSTRUZIONE TASTIERA SIDEBAR & LOG DIARIO (SOLO DESKTOP)
     // =========================================================================
     function buildSidebarKeyboard() {
       keyboardGrid.innerHTML = '';
@@ -1455,7 +1610,7 @@
     }
 
     // =========================================================================
-    // 5. EVENTI UI & CONTROLLI TOUCH JOYSTICK
+    // 5. EVENTI UI & CONTROLLI TRACKPAD / TASTIERA
     // =========================================================================
     diffSelector.addEventListener('click', (e) => {
       const btn = e.target.closest('.diff-btn');
@@ -1487,10 +1642,15 @@
 
     retryBtn.addEventListener('click', () => {
       audio.unlock();
+      if (endAnimFrame) {
+        cancelAnimationFrame(endAnimFrame);
+        endAnimFrame = null;
+      }
       endOverlay.classList.remove('visible');
       endInfo.classList.remove('visible');
       startModal.classList.remove('hidden');
       state.phase = 'menu';
+      resetJoystick();
       audio.stopMusic();
     });
 
@@ -1511,6 +1671,60 @@
       keys[e.key.toLowerCase()] = false;
     });
 
+    function clientToTrackpad(clientX, clientY) {
+      const rect = mobileTrackpad.getBoundingClientRect();
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    // Trackpad dedicato (UNICO posto dove muovere l'omino su smartphone/tablet)
+    mobileTrackpad.addEventListener('pointerdown', (e) => {
+      audio.unlock();
+      if (state.phase !== 'playing') return;
+      e.preventDefault();
+      try { mobileTrackpad.setPointerCapture(e.pointerId); } catch (err) {}
+      const pt = clientToTrackpad(e.clientX, e.clientY);
+      joy.active = true;
+      joy.touchId = e.pointerId;
+      joy.originX = pt.x;
+      joy.originY = pt.y;
+      joy.currX = pt.x;
+      joy.currY = pt.y;
+      updateTrackpadVisual();
+    });
+
+    mobileTrackpad.addEventListener('pointermove', (e) => {
+      if (!joy.active || e.pointerId !== joy.touchId) return;
+      e.preventDefault();
+      const pt = clientToTrackpad(e.clientX, e.clientY);
+      joy.currX = pt.x;
+      joy.currY = pt.y;
+
+      const dx = joy.currX - joy.originX;
+      const dy = joy.currY - joy.originY;
+      const dist = Math.hypot(dx, dy);
+      if (dist > joy.maxRadius) {
+        joy.originX = joy.currX - (dx / dist) * joy.maxRadius;
+        joy.originY = joy.currY - (dy / dist) * joy.maxRadius;
+      }
+      updateTrackpadVisual();
+    });
+
+    function endTrackpadPointer(e) {
+      if (!joy.active || e.pointerId !== joy.touchId) return;
+      resetJoystick();
+    }
+    mobileTrackpad.addEventListener('pointerup', endTrackpadPointer);
+    mobileTrackpad.addEventListener('pointercancel', endTrackpadPointer);
+
+    // Previene scroll/rimbalzi su iOS Safari quando si usa il trackpad
+    mobileTrackpad.addEventListener('touchstart', (e) => { if (state.phase === 'playing') e.preventDefault(); }, { passive: false });
+    mobileTrackpad.addEventListener('touchmove', (e) => { if (state.phase === 'playing') e.preventDefault(); }, { passive: false });
+
+    // Su desktop (se si usa un monitor touch senza trackpad) rimane il fallback sull'arena;
+    // su smartphone/tablet il tocco sull'arena NON muove l'omino.
     function clientToCanvas(clientX, clientY) {
       const rect = canvas.getBoundingClientRect();
       return {
@@ -1521,6 +1735,7 @@
 
     canvas.addEventListener('touchstart', (e) => {
       audio.unlock();
+      if (isEssentialMobileLayout()) return;
       if (state.phase !== 'playing') return;
       e.preventDefault();
       const t = e.changedTouches[0];
@@ -1534,14 +1749,13 @@
     }, { passive: false });
 
     canvas.addEventListener('touchmove', (e) => {
-      if (!joy.active) return;
+      if (isEssentialMobileLayout() || !joy.active) return;
       e.preventDefault();
       for (const t of e.changedTouches) {
         if (t.identifier === joy.touchId) {
           const pt = clientToCanvas(t.clientX, t.clientY);
           joy.currX = pt.x;
           joy.currY = pt.y;
-          // Se trascini oltre maxRadius, il centro segue il dito -> cambio direzione istantaneo!
           const dx = joy.currX - joy.originX;
           const dy = joy.currY - joy.originY;
           const dist = Math.hypot(dx, dy);
@@ -1554,25 +1768,24 @@
       }
     }, { passive: false });
 
-    function endJoystick(e) {
-      if (!joy.active) return;
+    function endArenaTouch(e) {
+      if (isEssentialMobileLayout() || !joy.active) return;
       for (const t of e.changedTouches) {
         if (t.identifier === joy.touchId) {
-          joy.active = false;
-          joy.touchId = null;
+          resetJoystick();
           break;
         }
       }
     }
-    canvas.addEventListener('touchend', endJoystick, { passive: true });
-    canvas.addEventListener('touchcancel', endJoystick, { passive: true });
+    canvas.addEventListener('touchend', endArenaTouch, { passive: true });
+    canvas.addEventListener('touchcancel', endArenaTouch, { passive: true });
 
     // =========================================================================
     // 6. LOGICA DI AVVIO E DIFFICOLTÀ
     // =========================================================================
     function startGame(difficulty) {
       startModal.classList.add('hidden');
-      joy.active = false;
+      resetJoystick();
 
       const entry = getNextUnlimitedWord();
       state.difficulty = difficulty;
@@ -2212,7 +2425,7 @@
     }
 
     // =========================================================================
-    // 9. RENDERING DARK-SKETCH + FORCA INCOMBENTE + JOYSTICK VISIVO
+    // 9. RENDERING DARK-SKETCH + FORCA INCOMBENTE
     // =========================================================================
     function jitter(seed, amp = 1.6) {
       const x = Math.sin(seed * 12.9898 + state.sketchSeed * 0.17) * 43758.5453;
@@ -2364,8 +2577,7 @@
         ctx.fillRect(-20, -20, ARENA_W + 40, ARENA_H + 40);
       }
 
-      // Disegna joystick virtuale solo mentre il dito tocca l'arena
-      if (joy.active) {
+      if (joy.active && !isEssentialMobileLayout()) {
         ctx.save();
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
         ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
@@ -2551,7 +2763,7 @@
       state.phase = 'ended';
       state.won = won;
       state.endReasonText = reasonText;
-      joy.active = false;
+      resetJoystick();
       prepOverlay.classList.remove('visible');
       audio.stopMusic();
 
@@ -2707,6 +2919,7 @@
 
         endCtx.restore();
 
+        endCtx.textAlign = 'left';
         endCtx.fillStyle = '#e74c3c';
         endCtx.font = 'bold 20px "Comic Sans MS", cursive';
         endCtx.fillText('R.I.P.', cx + 115, 130);
@@ -2764,11 +2977,12 @@
         endCtx.strokeStyle = '#e74c3c';
         endCtx.lineWidth = 2.5;
         drawSketchPolygonCircle(endCtx, 0, 0, 28, 12, 99, 2.5);
+        endCtx.textAlign = 'center';
         endCtx.fillStyle = '#ffeb3b';
         endCtx.font = 'bold 14px "Comic Sans MS", cursive';
-        endCtx.fillText('T_T', -12, 5);
+        endCtx.fillText('T_T', 0, 5);
         endCtx.fillStyle = '#aaa';
-        endCtx.fillText('uffa...', -18, -38);
+        endCtx.fillText('uffa...', 0, -38);
         endCtx.restore();
 
         endCtx.fillStyle = '#ffcc00';
